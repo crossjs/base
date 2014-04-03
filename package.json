@@ -1,0 +1,55 @@
+{
+  "name": "base",
+  "version": "1.0.0",
+  "description": "base class, with events and AOP",
+  "keywords": [ "base", "seajs", "modules" ],
+  "homepage": "https://github.com/crossjs/base",
+  "bugs": {
+    "url": "https://github.com/crossjs/base/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/crossjs/base/blob/master/LICENSE-MIT"
+    }
+  ],
+  "author": {
+    "name": "crossjs",
+    "url": "https://github.com/crossjs"
+  },
+  "main": "Gruntfile.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/crossjs/base.git"
+  },
+  "scripts": {
+    "test": "grunt qunit"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-cmd-transport": "*",
+    "grunt-cmd-concat": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-copy": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-yuidoc": "*",
+    "grunt-coveralls": "*",
+    "grunt-qunit-istanbul": "*",
+    "matchdep": "*"
+  },
+  "family": "pandora",
+  "spm": {
+    "output": [ "base.js" ],
+    "alias": {
+      "$": "$",
+      "class": "pandora/class/1.0.0/class",
+      "events": "pandora/events/1.0.0/events"
+    }
+  }
+}
