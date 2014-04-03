@@ -19,17 +19,19 @@
     QUnit.config.autostart = false;
 
     seajs.config({
-        'base': '../sea-modules/',
-        'map': [
-            ['/sea-modules/jquery', '/vendor/jquery/jquery']
-        ],
-        'alias': {
-          '$': 'jquery',
-          'base': 'pandora/base/1.0.0/base'
-        }
+      'base': '../sea-modules/',
+      'map': [
+          ['/sea-modules/jquery', '/vendor/jquery/jquery']
+      ],
+      'alias': {
+        '$': 'jquery',
+        'base': 'pandora/base/1.0.0/base'
+      }
     });
 
     seajs.use(['base'], function (Base) {
+
+      'use strict';
 
       QUnit.start();
 
@@ -63,55 +65,14 @@
         equal( baseA.hello(), 'hello earth', '' );
       });
 
-      test('setup', function() {
-        var BaseA = Base.extend({
-          setup: function () {
-            this.x = this.option('x');
-          }
-        });
-        var baseA = new BaseA({
-          x: 2,
-          y: 3
-        });
-        equal( baseA.x, 2, '' );
-        equal( baseA.y, undefined, '' );
-      });
-
-      test('render', function() {
-        var BaseA = Base.extend({
-        });
-        var baseA = new BaseA({
-        });
-        baseA.render();
-        baseA.render();
-        equal( $('.ue-component').length, 1, '' );
-        // for next tests
-        baseA.destroy();
-      });
-
-      test('$', function() {
-        var BaseA = Base.extend({
-          setup: function () {
-            this.render();
-            this.element.html('<p>123</p>');
-          }
-        });
-        var baseA = new BaseA();
-        equal( baseA.$('p').length, 1, '' );
-        // for next tests
-        baseA.destroy();
-      });
-
       test('destroy', function() {
         var BaseA = Base.extend({
         });
         var baseA = new BaseA({
         });
-        baseA.render();
         baseA.destroy();
         baseA.destroy();
-        equal( baseA.element, undefined, '' );
-        equal( $('.ue-component').length, 0, '' );
+        equal( baseA.__options, undefined, '' );
       });
 
       test('state', function() {
@@ -144,8 +105,6 @@
           events: events
         });
         deepEqual( baseA.option(), {
-          container: 'body',
-          element: '<div class="ue-component"></div>',
           x: 2,
           y: 3,
           z: 4,
@@ -170,52 +129,14 @@
         deepEqual( baseA.data(), {a: '1', b: '2'}, '' );
       });
 
-      test('delegate', function() {
-        var BaseA = Base.extend({
-          setup: function () {
-            this.render();
-          }
-        });
-        var baseA = new BaseA({
-          element: '<div></div>',
-          delegates: {
-            'click': function (e) {
-              ok( true, 'clicked' );
-            }
-          }
-        });
-        baseA.element.click();
-        baseA.destroy();
-      });
-
-      test('delegate', function() {
-        var BaseA = Base.extend({
-          setup: function () {
-            this.render();
-          }
-        });
-        var baseA = new BaseA({
-          element: '<div><button>button</button></div>',
-          delegates: function () {
-            var delegates = {
-              'click button': function (e) {
-                ok( true, 'clicked' );
-              }
-            };
-            return delegates;
-          }
-        });
-        baseA.element.find('button').click();
-        baseA.destroy();
-      });
-
       test('events', function() {
         var base = new Base({
           events: {
             test: function (e, t) {
               this.t = t;
               this.e = e;
-            }
+            },
+            test2: 'setup'
           }
         });
         base.fire('test', '2');
