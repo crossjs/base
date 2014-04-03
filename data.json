@@ -1,0 +1,265 @@
+{
+    "project": {
+        "name": "base",
+        "description": "base class, with events and AOP",
+        "version": "1.0.0"
+    },
+    "files": {
+        "src/aspect.js": {
+            "name": "src/aspect.js",
+            "modules": {
+                "Base": 1
+            },
+            "classes": {
+                "Aspect": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "src/base.js": {
+            "name": "src/base.js",
+            "modules": {},
+            "classes": {
+                "Base": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "Base": {
+            "name": "Base",
+            "submodules": {},
+            "classes": {
+                "Aspect": 1,
+                "Base": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "src/base.js",
+            "line": 17,
+            "description": "基类"
+        }
+    },
+    "classes": {
+        "Aspect": {
+            "name": "Aspect",
+            "shortname": "Aspect",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Base",
+            "namespace": "",
+            "file": "src/aspect.js",
+            "line": 13,
+            "description": "Aspect\n\nhttp://http://en.wikipedia.org/wiki/Aspect-oriented_programming",
+            "is_constructor": 1
+        },
+        "Base": {
+            "name": "Base",
+            "shortname": "Base",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Base",
+            "namespace": "",
+            "file": "src/base.js",
+            "line": 17,
+            "description": "基类\n\n扩展 Events 与 Aspect (AOP)",
+            "is_constructor": 1,
+            "implements": "Aspect"
+        }
+    },
+    "classitems": [
+        {
+            "file": "src/aspect.js",
+            "line": 25,
+            "description": "方法执行前执行，`callback`返回`false`则阻止原函数执行",
+            "itemtype": "method",
+            "name": "before",
+            "params": [
+                {
+                    "name": "methodName",
+                    "description": "方法名",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "当前实例",
+                "type": "Object"
+            },
+            "class": "Aspect",
+            "module": "Base"
+        },
+        {
+            "file": "src/aspect.js",
+            "line": 36,
+            "description": "方法执行后执行",
+            "itemtype": "method",
+            "name": "after",
+            "params": [
+                {
+                    "name": "methodName",
+                    "description": "方法名",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "回调函数",
+                    "type": "Function"
+                }
+            ],
+            "return": {
+                "description": "当前实例",
+                "type": "Object"
+            },
+            "class": "Aspect",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 29,
+            "description": "初始化函数，将自动执行；实现事件自动订阅与初始化参数",
+            "itemtype": "method",
+            "name": "initialize",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "参数",
+                    "type": "Object"
+                }
+            ],
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 43,
+            "description": "默认参数，子类自动继承并覆盖",
+            "itemtype": "property",
+            "name": "defaults",
+            "type": "{Object}",
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 51,
+            "description": "存取状态",
+            "itemtype": "method",
+            "name": "state",
+            "params": [
+                {
+                    "name": "state",
+                    "description": "状态值",
+                    "type": "Number",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "当前状态值或当前实例",
+                "type": "Mixed"
+            },
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 67,
+            "description": "获取初始化后的参数",
+            "itemtype": "method",
+            "name": "option",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "键",
+                    "type": "String",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "整个参数列表或指定参数值",
+                "type": "Mixed"
+            },
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 80,
+            "description": "存取数据；用于管理动态生成的数据，如服务端返回",
+            "itemtype": "method",
+            "name": "data",
+            "params": [
+                {
+                    "name": "key",
+                    "description": "键",
+                    "type": "String",
+                    "optional": true
+                },
+                {
+                    "name": "value",
+                    "description": "值",
+                    "type": "Mixed",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "整个数据、指定键值或当前实例",
+                "type": "Mixed"
+            },
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 109,
+            "description": "事件订阅，以及AOP",
+            "itemtype": "method",
+            "name": "initEvents",
+            "params": [
+                {
+                    "name": "events",
+                    "description": "订阅事件列表",
+                    "type": "Object|Function",
+                    "optional": true
+                }
+            ],
+            "return": {
+                "description": "当前实例",
+                "type": "Object"
+            },
+            "class": "Base",
+            "module": "Base"
+        },
+        {
+            "file": "src/base.js",
+            "line": 142,
+            "description": "销毁当前组件对象",
+            "itemtype": "method",
+            "name": "destroy",
+            "class": "Base",
+            "module": "Base"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: implements",
+            "line": " src/base.js:17"
+        },
+        {
+            "message": "unknown tag: implements",
+            "line": " src/base.js:17"
+        }
+    ]
+}

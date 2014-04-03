@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>src/base.js - base</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title="base"></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: 1.0.0</em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Aspect.html">Aspect</a></li>
+            
+                <li><a href="../classes/Base.html">Base</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Base.html">Base</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: src/base.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+define(function (require, exports, module) {
+
+/**
+ * 基类
+ *
+ * @module Base
+ */
+
+&#x27;use strict&#x27;;
+
+var $ = require(&#x27;$&#x27;),
+  Class = require(&#x27;class&#x27;),
+  Events = require(&#x27;events&#x27;).prototype,
+
+  Aspect = require(&#x27;./aspect&#x27;).prototype;
+
+/**
+ * 基类
+ *
+ * 扩展 Events 与 Aspect (AOP)
+ *
+ * @class Base
+ * @constructor
+ * @implements Events
+ * @implements Aspect
+ */
+var Base = Class.create(Events, Aspect, {
+
+  /**
+   * 初始化函数，将自动执行；实现事件自动订阅与初始化参数
+   *
+   * @method initialize
+   * @param {Object} options 参数
+   */
+  initialize: function (options) {
+    // 初始化参数，只读
+    this.__options = mergeDefaults(this, options || {});
+
+    // 初始化事件订阅
+    this.initEvents();
+  },
+
+  /**
+   * 默认参数，子类自动继承并覆盖
+   *
+   * @property {Object} defaults
+   * @type {Object}
+   */
+  defaults: { },
+
+  /**
+   * 存取状态
+   *
+   * @method state
+   * @param {Number} [state] 状态值
+   * @return {Mixed} 当前状态值或当前实例
+   */
+  state: function (state) {
+    if (state === undefined) {
+      return this.__state;
+    }
+
+    this.__state = state;
+    return this;
+  },
+
+  /**
+   * 获取初始化后的参数
+   *
+   * @method option
+   * @param {String} [key] 键
+   * @return {Mixed} 整个参数列表或指定参数值
+   */
+  option: function (key) {
+    var options = this.__options;
+    return ((key === undefined) ? options :
+      (options.hasOwnProperty(key) ? options[key] : undefined));
+  },
+
+  /**
+   * 存取数据；用于管理动态生成的数据，如服务端返回
+   *
+   * @method data
+   * @param {String} [key] 键
+   * @param {Mixed} [value] 值
+   * @return {Mixed} 整个数据、指定键值或当前实例
+   */
+  data: function (key, value) {
+    var datas = this.__datas || (this.__datas = {});
+
+    if (key === undefined) {
+      return datas;
+    }
+
+    if ($.isPlainObject(key)) {
+      $.extend(true, datas, key);
+    } else {
+
+      if (value === undefined) {
+        return (datas.hasOwnProperty(key) ? datas[key] : undefined);
+      } else {
+        datas[key] = value;
+      }
+    }
+
+    return this;
+  },
+
+  /**
+   * 事件订阅，以及AOP
+   *
+   * @method initEvents
+   * @param {Object|Function} [events] 订阅事件列表
+   * @return {Object} 当前实例
+   */
+  initEvents: function (events) {
+    events || (events = this.option(&#x27;events&#x27;));
+
+    if (!events) {
+      return this;
+    }
+
+    $.each(events, $.proxy(function (event, callback) {
+      var match = /^(before|after):(\w+)$/.exec(event);
+
+      if (typeof callback === &#x27;string&#x27;) {
+        callback = this[callback];
+      }
+
+      if (match) {
+        // AOP
+        this[match[1]](match[2], callback);
+      } else {
+        // Subscriber
+        this.on(event, callback);
+      }
+    }, this));
+
+    return this;
+  },
+
+  /**
+   * 销毁当前组件对象
+   * @method destroy
+   */
+  destroy: function () {
+    var prop;
+
+    // 移除事件订阅
+    this.off();
+
+    // 移除属性
+    for (prop in this) {
+      if (this.hasOwnProperty(prop)) {
+        delete this[prop];
+      }
+    }
+
+    this.destroy = function() { };
+  }
+
+});
+
+function mergeDefaults(instance, options) {
+  var arr = [options],
+    proto = instance.constructor.prototype;
+
+  while (proto) {
+    if (proto.hasOwnProperty(&#x27;defaults&#x27;)) {
+      arr.unshift(proto.defaults);
+    }
+
+    proto = proto.constructor.superclass;
+  }
+
+  arr.unshift(true, {});
+
+  return $.extend.apply(null, arr);
+}
+
+module.exports = Base;
+
+});
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>
