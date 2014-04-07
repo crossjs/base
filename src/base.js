@@ -65,16 +65,29 @@ var Base = Class.create(Events, Aspect, {
   },
 
   /**
-   * 获取初始化后的参数
+   * 获取初始化后的参数，支持多级获取，如：this.option('rules/remote')
    *
    * @method option
    * @param {String} [key] 键
    * @return {Mixed} 整个参数列表或指定参数值
    */
   option: function (key) {
-    var options = this.__options;
-    return ((key === undefined) ? options :
-      (options.hasOwnProperty(key) ? options[key] : undefined));
+    var options = this.__options,
+      keyArr;
+
+    if (key !== undefined) {
+      keyArr = key.split('/');
+
+      while ((key = keyArr.shift())) {
+        if (options.hasOwnProperty(key)) {
+          options = options[key];
+        } else {
+          return undefined;
+        }
+      }
+    }
+
+    return options;
   },
 
   /**

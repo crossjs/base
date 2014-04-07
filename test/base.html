@@ -102,16 +102,18 @@
         var baseA = new BaseA({
           x: 2,
           y: 3,
-          z: 4,
+          z: { a: 1 },
           events: events
         });
         deepEqual( baseA.option(), {
           x: 2,
           y: 3,
-          z: 4,
+          z: { a: 1 },
           events: events
         }, '' );
         equal( baseA.option('y'), 3, '' );
+        equal( baseA.option('z/a'), 1, '' );
+        equal( baseA.option('z/b'), undefined, '' );
         equal( baseA.option('w'), undefined, '' );
         deepEqual( baseA.option('events'), events, '' );
       });
