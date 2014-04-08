@@ -176,7 +176,7 @@
         {
             "file": "src\\base.js",
             "line": 67,
-            "description": "获取初始化后的参数",
+            "description": "获取初始化后的参数，支持多级获取，如：this.option('rules/remote')",
             "itemtype": "method",
             "name": "option",
             "params": [
@@ -196,7 +196,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 80,
+            "line": 93,
             "description": "存取数据；用于管理动态生成的数据，如服务端返回",
             "itemtype": "method",
             "name": "data",
@@ -223,7 +223,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 109,
+            "line": 122,
             "description": "事件订阅，以及AOP",
             "itemtype": "method",
             "name": "initEvents",
@@ -244,7 +244,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 142,
+            "line": 155,
             "description": "销毁当前组件对象",
             "itemtype": "method",
             "name": "destroy",
