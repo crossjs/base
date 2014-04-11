@@ -219,27 +219,29 @@ var Base = Class.create(Events, Aspect, {
    * @return {Object} 当前实例
    */
   initEvents: function (events) {
+    var self = this;
+
     events || (events = this.option(&#x27;events&#x27;));
 
     if (!events) {
       return this;
     }
 
-    $.each(events, $.proxy(function (event, callback) {
+    $.each(events, function (event, callback) {
       var match = /^(before|after):(\w+)$/.exec(event);
 
       if (typeof callback === &#x27;string&#x27;) {
-        callback = this[callback];
+        callback = self[callback];
       }
 
       if (match) {
         // AOP
-        this[match[1]](match[2], callback);
+        self[match[1]](match[2], callback);
       } else {
         // Subscriber
-        this.on(event, callback);
+        self.on(event, callback);
       }
-    }, this));
+    });
 
     return this;
   },
