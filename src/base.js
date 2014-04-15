@@ -142,6 +142,10 @@ var Base = Class.create(Events, Aspect, {
         callback = self[callback];
       }
 
+      if (typeof callback !== 'function') {
+        return true;
+      }
+
       if (match) {
         // AOP
         self[match[1]](match[2], callback);
