@@ -244,7 +244,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 157,
+            "line": 161,
             "description": "销毁当前组件对象",
             "itemtype": "method",
             "name": "destroy",
