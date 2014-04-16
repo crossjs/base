@@ -140,7 +140,7 @@
           }
         });
         base.fire('test', '2');
-        equal( base.e, 'test', '' );
+        equal( base.e.type, 'test', '' );
         equal( base.t, '2', '' );
         base.off('test');
         base.fire('test', '4');
