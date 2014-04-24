@@ -127,8 +127,8 @@
         deepEqual( baseA.option('a'), {b:{c:{d:'1'}}}, '' );
         deepEqual( baseA.option('a/b'), {c:{d:'1'}}, '' );
         deepEqual( baseA.option('a/b/c'), {d:'1'}, '' );
-        deepEqual( baseA.option('a/b/c/d'), '1', '' );
-        deepEqual( baseA.option('a/b/c/d/e'), undefined, '' );
+        equal( baseA.option('a/b/c/d'), '1', '' );
+        equal( baseA.option('a/b/c/d/e'), undefined, '' );
         equal( baseA.option('hasOwnProperty'), undefined, '' );
         equal( baseA.option('b'), undefined, '' );
         equal( baseA.option({a: '2'}), baseA, '' );

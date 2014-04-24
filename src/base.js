@@ -70,16 +70,17 @@ var Base = Class.create(Events, Aspect, {
    * @method option
    * @param {String} [key] 键
    * @param {Mixed} [value] 值
+   * @param {Object} [context] 上下文
    * @return {Mixed} 整个参数列表或指定参数值
    */
-  option: function (key, value) {
-    var options = this.__options;
+  option: function (key, value, context) {
+    var options = context || this.__options;
 
     if (key === undefined) {
       return options;
     }
 
-    function getOption () {
+    function get () {
       var keyArr = key.split('/');
 
       while ((key = keyArr.shift())) {
@@ -93,7 +94,7 @@ var Base = Class.create(Events, Aspect, {
       return options;
     }
 
-    function setOption () {
+    function set () {
       var keyMap = {};
 
       function recruit (obj, arr) {
@@ -109,20 +110,20 @@ var Base = Class.create(Events, Aspect, {
 
       recruit(keyMap, key.split('/'));
 
-      extendOption(keyMap);
+      extend(keyMap);
     }
 
-    function extendOption (obj) {
+    function extend (obj) {
       $.extend(true, options, obj);
     }
 
     if ($.isPlainObject(key)) {
-      extendOption(key);
+      extend(key);
     } else {
       if (value === undefined) {
-        return getOption();
+        return get();
       } else {
-        setOption();
+        set();
       }
     }
 
