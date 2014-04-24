@@ -191,6 +191,12 @@
                     "description": "值",
                     "type": "Mixed",
                     "optional": true
+                },
+                {
+                    "name": "context",
+                    "description": "上下文",
+                    "type": "Object",
+                    "optional": true
                 }
             ],
             "return": {
@@ -202,7 +208,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 132,
+            "line": 133,
             "description": "事件订阅，以及AOP",
             "itemtype": "method",
             "name": "initEvents",
@@ -223,7 +229,7 @@
         },
         {
             "file": "src\\base.js",
-            "line": 171,
+            "line": 172,
             "description": "销毁当前组件对象",
             "itemtype": "method",
             "name": "destroy",
