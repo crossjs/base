@@ -65,18 +65,22 @@ var Base = Class.create(Events, Aspect, {
   },
 
   /**
-   * 获取初始化后的参数，支持多级获取，如：this.option('rules/remote')
+   * 获取初始化后的数据/参数，支持多级获取，如：this.option('rules/remote')
    *
    * @method option
    * @param {String} [key] 键
+   * @param {Mixed} [value] 值
    * @return {Mixed} 整个参数列表或指定参数值
    */
-  option: function (key) {
-    var options = this.__options,
-      keyArr;
+  option: function (key, value) {
+    var options = this.__options;
 
-    if (key !== undefined) {
-      keyArr = key.split('/');
+    if (key === undefined) {
+      return options;
+    }
+
+    function getOption () {
+      var keyArr = key.split('/');
 
       while ((key = keyArr.shift())) {
         if (options.hasOwnProperty(key)) {
@@ -85,34 +89,40 @@ var Base = Class.create(Events, Aspect, {
           return undefined;
         }
       }
+
+      return options;
     }
 
-    return options;
-  },
+    function setOption () {
+      var keyMap = {};
 
-  /**
-   * 存取数据；用于管理动态生成的数据，如服务端返回
-   *
-   * @method data
-   * @param {String} [key] 键
-   * @param {Mixed} [value] 值
-   * @return {Mixed} 整个数据、指定键值或当前实例
-   */
-  data: function (key, value) {
-    var datas = this.__datas || (this.__datas = {});
+      function recruit (obj, arr) {
+        key = arr.shift();
 
-    if (key === undefined) {
-      return datas;
+        if (key) {
+          obj[key] = recruit({}, arr);
+          return obj;
+        }
+
+        return value;
+      }
+
+      recruit(keyMap, key.split('/'));
+
+      extendOption(keyMap);
+    }
+
+    function extendOption (obj) {
+      $.extend(true, options, obj);
     }
 
     if ($.isPlainObject(key)) {
-      $.extend(true, datas, key);
+      extendOption(key);
     } else {
-
       if (value === undefined) {
-        return (datas.hasOwnProperty(key) ? datas[key] : undefined);
+        return getOption();
       } else {
-        datas[key] = value;
+        setOption();
       }
     }
 

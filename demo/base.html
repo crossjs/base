@@ -85,7 +85,7 @@
         equal( baseA.state(), 1, '' );
       });
 
-      test('option', function() {
+      test('option/get', function() {
         var BaseA = Base.extend({
           defaults: {
             y: 5,
@@ -101,32 +101,39 @@
         var baseA = new BaseA({
           x: 2,
           y: 3,
-          z: 4,
+          z: { a: 1 },
           events: events
         });
         deepEqual( baseA.option(), {
           x: 2,
           y: 3,
-          z: 4,
+          z: { a: 1 },
           events: events
         }, '' );
         equal( baseA.option('y'), 3, '' );
+        equal( baseA.option('z/a'), 1, '' );
+        equal( baseA.option('z/b'), undefined, '' );
         equal( baseA.option('w'), undefined, '' );
         deepEqual( baseA.option('events'), events, '' );
       });
 
-      test('data', function() {
+      test('option/set', function() {
         var BaseA = Base.extend({
         });
         var baseA = new BaseA({
         });
-        deepEqual( baseA.data(), {}, '' );
-        equal( baseA.data('a', '1'), baseA, '' );
-        equal( baseA.data('a'), '1', '' );
-        equal( baseA.data('hasOwnProperty'), undefined, 'built-in property returns undefined' );
-        equal( baseA.data('b'), undefined, '' );
-        equal( baseA.data({b: '2'}), baseA, '' );
-        deepEqual( baseA.data(), {a: '1', b: '2'}, '' );
+        equal( baseA.option('a/b/c/d', '1'), baseA, '' );
+        deepEqual( baseA.option('a'), {b:{c:{d:'1'}}}, '' );
+        deepEqual( baseA.option('a/b'), {c:{d:'1'}}, '' );
+        deepEqual( baseA.option('a/b/c'), {d:'1'}, '' );
+        deepEqual( baseA.option('a/b/c/d'), '1', '' );
+        deepEqual( baseA.option('a/b/c/d/e'), undefined, '' );
+        equal( baseA.option('hasOwnProperty'), undefined, '' );
+        equal( baseA.option('b'), undefined, '' );
+        equal( baseA.option({a: '2'}), baseA, '' );
+        equal( baseA.option('a'), '2', '' );
+        equal( baseA.option('a/b'), undefined, '' );
+        deepEqual( baseA.option(), {a: '2'}, '' );
       });
 
       test('events', function() {
@@ -136,7 +143,8 @@
               this.t = t;
               this.e = e;
             },
-            test2: 'setup'
+            test2: 'setup',
+            test3: 'nothing'
           }
         });
         base.fire('test', '2');
@@ -150,16 +158,16 @@
       test('AOP', function() {
         var BaseA = Base.extend({
           hello: function () {
-            return 'hello ' + this.data('world');
+            return 'hello ' + this.option('world');
           }
         });
         var baseA = new BaseA({
           events: {
             'before:hello': function () {
-              if (this.data('world') === 'mars') {
+              if (this.option('world') === 'mars') {
                 return false;
               }
-              this.data('world', 'mars');
+              this.option('world', 'mars');
               ok( true, 'before called');
             },
             'after:hello': function (e, result) {
