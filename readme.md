@@ -1,7 +1,7 @@
 #base
 
-[![Build Status](https://api.travis-ci.org/crossjs/base.png?branch=master)](http://travis-ci.org/crossjs/base)
-[![Coverage Status](https://coveralls.io/repos/crossjs/base/badge.png?branch=master)](https://coveralls.io/r/crossjs/base?branch=master)
+[![Build Status](https://api.travis-ci.org/pandorajs/base.png?branch=master)](http://travis-ci.org/pandorajs/base)
+[![Coverage Status](https://coveralls.io/repos/pandorajs/base/badge.png?branch=master)](https://coveralls.io/r/pandorajs/base?branch=master)
 
  > base class, seajs module
 
@@ -17,6 +17,10 @@
 
 1. run `spm install pandora/base`
 1. write `require('pandora/base/VERSION.NUMBER/base')`
+
+##find examples
+
+1. view the source files in '/src'
 
 ##history
 

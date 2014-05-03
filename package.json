@@ -3,24 +3,24 @@
   "version": "1.0.0",
   "description": "base class, with events and AOP",
   "keywords": [ "base", "seajs", "modules" ],
-  "homepage": "https://github.com/crossjs/base",
+  "homepage": "https://github.com/pandorajs/base",
   "bugs": {
-    "url": "https://github.com/crossjs/base/issues"
+    "url": "https://github.com/pandorajs/base/issues"
   },
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/crossjs/base/blob/master/LICENSE-MIT"
+      "url": "https://github.com/pandorajs/base/blob/master/LICENSE-MIT"
     }
   ],
   "author": {
-    "name": "crossjs",
-    "url": "https://github.com/crossjs"
+    "name": "pandorajs",
+    "url": "https://github.com/pandorajs"
   },
   "main": "Gruntfile.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/crossjs/base.git"
+    "url": "git://github.com/pandorajs/base.git"
   },
   "scripts": {
     "test": "grunt qunit"

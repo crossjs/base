@@ -17,26 +17,48 @@ var $ = require('$'),
 /**
  * 基类
  *
- * 扩展 Events 与 Aspect (AOP)
+ * 实现 事件订阅 与 Aspect (AOP)
  *
  * @class Base
  * @constructor
  * @implements Events
  * @implements Aspect
+ *
+ * @example
+ * ```
+ * // 创建子类
+ * var SomeBase = Base.extend({
+ *   someMethod: function () {
+ *     this.fire('someEvent');
+ *   }
+ * });
+ * // 实例化
+ * var someBase = new SomeBase({
+ *   events: {
+ *     someEvent: function () {
+ *       console.log('someEvent fired');
+ *     }
+ *   }
+ * });
+ * // 调用方法
+ * someBase.someMethod();
+ * // 控制台将输出：
+ * // someEvent fired
+ * ```
  */
 var Base = Class.create(Events, Aspect, {
 
   /**
-   * 初始化函数，将自动执行；实现事件自动订阅与初始化参数
+   * 初始化函数，将自动执行；执行参数初始化与订阅事件初始化
    *
    * @method initialize
    * @param {Object} options 参数
    */
   initialize: function (options) {
-    // 初始化参数，只读
+    // 初始化参数
     this.__options = mergeDefaults(this, options || {});
 
-    // 初始化事件订阅
+    // 初始化订阅事件
     this.initEvents();
   },
 
@@ -65,7 +87,8 @@ var Base = Class.create(Events, Aspect, {
   },
 
   /**
-   * 获取初始化后的数据/参数，支持多级获取，如：this.option('rules/remote')
+   * 存取初始化后的数据/参数，支持多级存取，
+   * 如：this.option('rules/remote') 对应于 { rules: { remote: ... } }
    *
    * @method option
    * @param {String} [key] 键
@@ -134,7 +157,7 @@ var Base = Class.create(Events, Aspect, {
    * 事件订阅，以及AOP
    *
    * @method initEvents
-   * @param {Object|Function} [events] 订阅事件列表
+   * @param {Object|Function} [events] 事件订阅列表
    * @return {Object} 当前实例
    */
   initEvents: function (events) {
@@ -170,7 +193,7 @@ var Base = Class.create(Events, Aspect, {
   },
 
   /**
-   * 销毁当前组件对象
+   * 销毁当前组件实例
    * @method destroy
    */
   destroy: function () {

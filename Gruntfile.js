@@ -32,6 +32,7 @@ module.exports = function(grunt) {
       options: {
         '--web-security': 'no',
         coverage: {
+          baseUrl: './',
           src: ['src/*.js'],
           instrumentedFiles: 'temp/',
           lcovReport: 'report/',
