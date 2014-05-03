@@ -1,8 +1,8 @@
 /*
  * base
- * https://github.com/crossjs/base
+ * https://github.com/pandorajs/base
  *
- * Copyright (c) 2014 crossjs
+ * Copyright (c) 2014 pandorajs
  * Licensed under the MIT license.
  */
 
