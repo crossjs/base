@@ -170,7 +170,7 @@ var Base = Class.create(Events, Aspect, {
     }
 
     $.each(events, function (event, callback) {
-      var match = /^(before|after):(\w+)$/.exec(event);
+      var match;
 
       if (typeof callback === 'string') {
         callback = self[callback];
@@ -179,6 +179,8 @@ var Base = Class.create(Events, Aspect, {
       if (typeof callback !== 'function') {
         return true;
       }
+
+      match = /^(before|after):(\w+)$/.exec(event);
 
       if (match) {
         // AOP
