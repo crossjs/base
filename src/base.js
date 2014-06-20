@@ -136,17 +136,21 @@ var Base = Class.create({
 
       recruit(keyMap, key.split('/'));
 
-      copy(options, keyMap);
+      copy(options, keyMap, override);
     }
 
-    function copy (target, source) {
+    function isObj (obj) {
+      return Object.prototype.toString.call(obj) === '[object Object]';
+    }
+
+    function copy (target, source, override) {
       var p, obj;
       for (p in source) {
         obj = source[p];
 
-        if (!override && typeof obj === 'object') {
-          typeof target[p] === 'object' || (target[p] = {});
-          copy(target[p], obj);
+        if (!override && isObj(obj)) {
+          isObj(target[p]) || (target[p] = {});
+          copy(target[p], obj, false);
         } else {
           target[p] = obj;
         }
@@ -161,7 +165,7 @@ var Base = Class.create({
       }
     } else {
       // plain object
-      copy(options, key);
+      copy(options, key, override);
     }
 
     return this;
