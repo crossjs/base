@@ -96,11 +96,11 @@ var Base = Class.create({
    * @method option
    * @param {String} [key] 键
    * @param {Mixed} [value] 值
-   * @param {Object} [context] 上下文
+   * @param {String} [context] 上下文
    * @return {Mixed} 整个参数列表或指定参数值
    */
   option: function (key, value, context, override) {
-    var options = context || this.__options;
+    var options = context ? this.__options[context] : this.__options;
 
     if (key === undefined) {
       return options;
