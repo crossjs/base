@@ -10,9 +10,9 @@ define(function (require, exports, module) {
 
 var $ = require('$'),
   Class = require('class'),
-  Events = require('events').prototype,
+  Events = require('events'),
 
-  Aspect = require('./aspect').prototype;
+  Aspect = require('./aspect');
 
 /**
  * 基类
@@ -46,7 +46,7 @@ var $ = require('$'),
  * // someEvent fired
  * ```
  */
-var Base = Class.create(Events, Aspect, {
+var Base = Class.create({
 
   /**
    * 初始化函数，将自动执行；执行参数初始化与订阅事件初始化
@@ -55,12 +55,16 @@ var Base = Class.create(Events, Aspect, {
    * @param {Object} options 参数
    */
   initialize: function (options) {
+    Base.superclass.initialize.apply(this, arguments);
+
     // 初始化参数
     this.__options = mergeDefaults(this, options || {});
 
     // 初始化订阅事件
     this.initEvents();
   },
+
+  mixins: [Events.prototype, Aspect.prototype],
 
   /**
    * 默认参数，子类自动继承并覆盖
