@@ -47,7 +47,6 @@
   "spm": {
     "output": [ "base.js" ],
     "alias": {
-      "$": "$",
       "class": "pandora/class/1.0.0/class",
       "events": "pandora/events/1.0.0/events"
     }

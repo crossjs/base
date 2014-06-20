@@ -8,11 +8,10 @@ define(function (require, exports, module) {
 
 'use strict';
 
-var $ = require('$'),
-  Class = require('class'),
-  Events = require('events'),
+var Class = require('class'),
+  Events = require('events');
 
-  Aspect = require('./aspect');
+var Aspect = require('./aspect');
 
 /**
  * 基类
@@ -100,7 +99,7 @@ var Base = Class.create({
    * @param {Object} [context] 上下文
    * @return {Mixed} 整个参数列表或指定参数值
    */
-  option: function (key, value, context) {
+  option: function (key, value, context, override) {
     var options = context || this.__options;
 
     if (key === undefined) {
@@ -137,21 +136,32 @@ var Base = Class.create({
 
       recruit(keyMap, key.split('/'));
 
-      extend(keyMap);
+      copy(options, keyMap);
     }
 
-    function extend (obj) {
-      $.extend(true, options, obj);
+    function copy (target, source) {
+      var p, obj;
+      for (p in source) {
+        obj = source[p];
+
+        if (!override && typeof obj === 'object') {
+          typeof target[p] === 'object' || (target[p] = {});
+          copy(target[p], obj);
+        } else {
+          target[p] = obj;
+        }
+      }
     }
 
-    if ($.isPlainObject(key)) {
-      extend(key);
-    } else {
+    if (typeof key === 'string') {
       if (value === undefined) {
         return get();
       } else {
         set();
       }
+    } else {
+      // plain object
+      copy(options, key);
     }
 
     return this;
