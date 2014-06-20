@@ -157,15 +157,14 @@ var Base = Class.create({
       }
     }
 
-    if (typeof key === 'string') {
+    if (isObj(key)) {
+      copy(options, key, override);
+    } else {
       if (value === undefined) {
         return get();
       } else {
         set();
       }
-    } else {
-      // plain object
-      copy(options, key, override);
     }
 
     return this;
