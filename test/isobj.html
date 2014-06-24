@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>base</title>
+<link rel="stylesheet" href="../vendor/qunit/qunit.css">
+</head>
+<body>
+  <h1 id="qunit-header">QUnit Test Suite</h1>
+  <h2 id="qunit-banner"></h2>
+  <div id="qunit-testrunner-toolbar"></div>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+  <div id="qunit-fixture">test markup</div>
+  <script src="../vendor/jquery/jquery.js"></script>
+  <script src="../vendor/seajs/sea.js"></script>
+  <script src="../vendor/qunit/qunit.js"></script>
+  <script>
+    QUnit.config.autostart = false;
+
+    seajs.config({
+      'base': '../sea-modules/',
+      'map': [
+        ['/sea-modules/jquery', '/vendor/jquery/jquery']
+      ],
+      'alias': {
+        '$': 'jquery',
+        'class': 'pandora/class/1.0.0/class',
+        'events': 'pandora/events/1.0.0/events'
+      }
+    });
+
+    function isObj (obj) {
+      return Object.prototype.toString.call(obj) === '[object Object]' &&
+          obj.constructor &&
+          obj.constructor.prototype.hasOwnProperty('isPrototypeOf');
+    }
+
+    seajs.use(['../src/base'], function (Base) {
+
+      'use strict';
+
+      QUnit.start();
+
+      test('number', function() {
+        equal( isObj(1), false, '' );
+      });
+
+      test('string', function() {
+        equal( isObj('1'), false, '' );
+      });
+
+      test('{}', function() {
+        equal( isObj({}), true, '' );
+      });
+
+      test('[]', function() {
+        equal( isObj([]), false, '' );
+      });
+
+      test('node', function() {
+        equal( isObj(document.body), false, '' );
+      });
+
+      test('$(node)', function() {
+        equal( isObj($(document.body)), false, '' );
+      });
+
+      test('new Base', function() {
+        var base = new Base();
+        equal( isObj(base), false, '' );
+      });
+
+    });
+  </script>
+</body>
+</html>

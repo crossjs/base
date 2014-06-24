@@ -14,7 +14,9 @@ var Class = require('class'),
 var Aspect = require('./aspect');
 
 function isObj (obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]';
+  return Object.prototype.toString.call(obj) === '[object Object]' &&
+      obj.constructor &&
+      obj.constructor.prototype.hasOwnProperty('isPrototypeOf');
 }
 
 function copy (target, source, override) {
