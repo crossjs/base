@@ -13,6 +13,56 @@ var Class = require('class'),
 
 var Aspect = require('./aspect');
 
+function isObj (obj) {
+  return Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+function copy (target, source, override) {
+  var p, obj;
+  for (p in source) {
+    obj = source[p];
+
+    if (!override && isObj(obj)) {
+      isObj(target[p]) || (target[p] = {});
+      copy(target[p], obj, false);
+    } else {
+      target[p] = obj;
+    }
+  }
+}
+
+function merge (instance, options) {
+  var ret = {},
+    arr = [],
+    obj,
+    proto = instance.constructor.prototype;
+
+  if (options) {
+    arr.push(options);
+  }
+
+  while (proto) {
+    if (proto.defaults) {
+      arr.push(proto.defaults);
+    }
+
+    proto = proto.constructor.superclass;
+  }
+
+  while ((obj = arr.pop())) {
+    copy(ret, obj);
+  }
+
+  return ret;
+}
+
+function each (obj, func) {
+  var p;
+  for (p in obj) {
+    func.call(null, p, obj[p]);
+  }
+}
+
 /**
  * 基类
  *
@@ -57,7 +107,7 @@ var Base = Class.create({
     Base.superclass.initialize.apply(this, arguments);
 
     // 初始化参数
-    this.__options = mergeDefaults(this, options || {});
+    this.__options = merge(this, options);
 
     // 初始化订阅事件
     this.initEvents();
@@ -139,24 +189,6 @@ var Base = Class.create({
       copy(options, keyMap, override);
     }
 
-    function isObj (obj) {
-      return Object.prototype.toString.call(obj) === '[object Object]';
-    }
-
-    function copy (target, source, override) {
-      var p, obj;
-      for (p in source) {
-        obj = source[p];
-
-        if (!override && isObj(obj)) {
-          isObj(target[p]) || (target[p] = {});
-          copy(target[p], obj, false);
-        } else {
-          target[p] = obj;
-        }
-      }
-    }
-
     if (isObj(key)) {
       copy(options, key, override);
     } else {
@@ -180,13 +212,13 @@ var Base = Class.create({
   initEvents: function (events) {
     var self = this;
 
-    events || (events = this.option('events'));
+    events || (events = self.option('events'));
 
     if (!events) {
-      return this;
+      return self;
     }
 
-    $.each(events, function (event, callback) {
+    each(events, function (event, callback) {
       var match;
 
       if (typeof callback === 'string') {
@@ -208,7 +240,7 @@ var Base = Class.create({
       }
     });
 
-    return this;
+    return self;
   },
 
   /**
@@ -232,23 +264,6 @@ var Base = Class.create({
   }
 
 });
-
-function mergeDefaults(instance, options) {
-  var arr = [options],
-    proto = instance.constructor.prototype;
-
-  while (proto) {
-    if (proto.hasOwnProperty('defaults')) {
-      arr.unshift(proto.defaults);
-    }
-
-    proto = proto.constructor.superclass;
-  }
-
-  arr.unshift(true, {});
-
-  return $.extend.apply(null, arr);
-}
 
 module.exports = Base;
 

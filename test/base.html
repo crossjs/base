@@ -71,9 +71,7 @@
         });
         var baseA = new BaseA({
         });
-        console.log(baseA);
         baseA.destroy();
-        console.log(baseA);
         baseA.destroy();
         equal( baseA.__options, undefined, '' );
       });
@@ -137,6 +135,40 @@
         equal( baseA.option('a'), '2', '' );
         equal( baseA.option('a/b'), undefined, '' );
         deepEqual( baseA.option(), {a: '2'}, '' );
+      });
+
+      test('option/set/array', function() {
+        var BaseA = Base.extend({
+        });
+        var baseA = new BaseA({
+        });
+        baseA.option('a', [1,2]);
+        deepEqual( baseA.option('a'), [1,2], '' );
+        baseA.option('a', [3]);
+        deepEqual( baseA.option('a'), [3], '' );
+        baseA.option('a', 3);
+        equal( baseA.option('a'), 3, '' );
+        baseA.option('a', {b:[1,2]});
+        deepEqual( baseA.option('a/b'), [1,2], '' );
+        baseA.option('a/b', [3]);
+        deepEqual( baseA.option('a/b'), [3], '' );
+        baseA.option('a/b', 3);
+        equal( baseA.option('a/b'), 3, '' );
+      });
+
+      test('option/set/null', function() {
+        var BaseA = Base.extend({
+        });
+        var baseA = new BaseA({
+        });
+        baseA.option('a', 'test');
+        equal( baseA.option('a'), 'test', '' );
+        baseA.option('a', null);
+        equal( baseA.option('a'), null, '' );
+        baseA.option('a/b', 'test');
+        equal( baseA.option('a/b'), 'test', '' );
+        baseA.option('a/b', null);
+        equal( baseA.option('a/b'), null, '' );
       });
 
       test('events', function() {
