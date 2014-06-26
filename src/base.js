@@ -13,6 +13,10 @@ var Class = require('class'),
 
 var Aspect = require('./aspect');
 
+function isArray (obj) {
+  return Object.prototype.toString.call(obj) === '[object Array]';
+}
+
 function isObj (obj) {
   return Object.prototype.toString.call(obj) === '[object Object]' &&
       obj.constructor &&
@@ -20,17 +24,31 @@ function isObj (obj) {
 }
 
 function copy (target, source, override) {
-  var p, obj;
+  var p, obj, src, copyIsArray, clone;
+
   for (p in source) {
     obj = source[p];
 
-    if (!override && isObj(obj)) {
-      isObj(target[p]) || (target[p] = {});
-      copy(target[p], obj, false);
-    } else {
+    if (target === obj) {
+      continue;
+    }
+
+    src = target[p];
+
+    if (!override &&
+        ( (copyIsArray = isArray(obj)) || isObj(obj) )) {
+
+      clone = copyIsArray ?
+        (src && isArray(src) ? src : []) :
+        (src && isObj(src) ? src : {});
+
+      target[p] = copy(clone, obj, false);
+    } else if (typeof obj !== 'undefined') {
       target[p] = obj;
     }
   }
+
+  return target;
 }
 
 function merge (instance, options) {

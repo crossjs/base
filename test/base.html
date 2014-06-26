@@ -145,13 +145,13 @@
         baseA.option('a', [1,2]);
         deepEqual( baseA.option('a'), [1,2], '' );
         baseA.option('a', [3]);
-        deepEqual( baseA.option('a'), [3], '' );
+        deepEqual( baseA.option('a'), [3,2], '' );
         baseA.option('a', 3);
         equal( baseA.option('a'), 3, '' );
         baseA.option('a', {b:[1,2]});
         deepEqual( baseA.option('a/b'), [1,2], '' );
         baseA.option('a/b', [3]);
-        deepEqual( baseA.option('a/b'), [3], '' );
+        deepEqual( baseA.option('a/b'), [3,2], '' );
         baseA.option('a/b', 3);
         equal( baseA.option('a/b'), 3, '' );
       });
