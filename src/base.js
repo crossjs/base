@@ -1,290 +1,290 @@
-define(function (require, exports, module) {
+define(function(require, exports, module) {
 
-/**
- * 基类
- *
- * @module Base
- */
+  /**
+   * 基类
+   *
+   * @module Base
+   */
 
-'use strict';
+  'use strict';
 
-var Class = require('class'),
-  Events = require('events');
+  var Class = require('class'),
+    Events = require('events');
 
-var Aspect = require('./aspect');
+  var Aspect = require('./aspect');
 
-function isArray (obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
-}
+  function isArr(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+  }
 
-function isObj (obj) {
-  return Object.prototype.toString.call(obj) === '[object Object]' &&
+  function isObj(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]' &&
       obj.constructor &&
       obj.constructor.prototype.hasOwnProperty('isPrototypeOf');
-}
+  }
 
-function copy (target, source, override) {
-  var p, obj, src, copyIsArray, clone;
+  function copy(target, source, override) {
+    var p, obj, src, copyIsArray, clone;
 
-  for (p in source) {
-    obj = source[p];
+    for (p in source) {
+      obj = source[p];
 
-    if (target === obj) {
-      continue;
+      if (target === obj) {
+        continue;
+      }
+
+      src = target[p];
+
+      if (!override &&
+        ((copyIsArray = isArr(obj)) || isObj(obj))) {
+
+        clone = copyIsArray ?
+          (src && isArr(src) ? src : []) :
+          (src && isObj(src) ? src : {});
+
+        target[p] = copy(clone, obj, false);
+      } else if (typeof obj !== 'undefined') {
+        target[p] = obj;
+      }
     }
 
-    src = target[p];
-
-    if (!override &&
-        ( (copyIsArray = isArray(obj)) || isObj(obj) )) {
-
-      clone = copyIsArray ?
-        (src && isArray(src) ? src : []) :
-        (src && isObj(src) ? src : {});
-
-      target[p] = copy(clone, obj, false);
-    } else if (typeof obj !== 'undefined') {
-      target[p] = obj;
-    }
+    return target;
   }
 
-  return target;
-}
+  function merge(instance, options) {
+    var ret = {},
+      arr = [],
+      obj,
+      proto = instance.constructor.prototype;
 
-function merge (instance, options) {
-  var ret = {},
-    arr = [],
-    obj,
-    proto = instance.constructor.prototype;
-
-  if (options) {
-    arr.push(options);
-  }
-
-  while (proto) {
-    if (proto.defaults) {
-      arr.push(proto.defaults);
+    if (options) {
+      arr.push(options);
     }
 
-    proto = proto.constructor.superclass;
+    while (proto) {
+      if (proto.defaults) {
+        arr.push(proto.defaults);
+      }
+
+      proto = proto.constructor.superclass;
+    }
+
+    while ((obj = arr.pop())) {
+      copy(ret, obj);
+    }
+
+    return ret;
   }
 
-  while ((obj = arr.pop())) {
-    copy(ret, obj);
+  function each(obj, func) {
+    var p;
+    for (p in obj) {
+      func.call(null, p, obj[p]);
+    }
   }
-
-  return ret;
-}
-
-function each (obj, func) {
-  var p;
-  for (p in obj) {
-    func.call(null, p, obj[p]);
-  }
-}
-
-/**
- * 基类
- *
- * 实现 事件订阅 与 Aspect (AOP)
- *
- * @class Base
- * @constructor
- * @implements Events
- * @implements Aspect
- *
- * @example
- * ```
- * // 创建子类
- * var SomeBase = Base.extend({
- *   someMethod: function () {
- *     this.fire('someEvent');
- *   }
- * });
- * // 实例化
- * var someBase = new SomeBase({
- *   events: {
- *     someEvent: function () {
- *       console.log('someEvent fired');
- *     }
- *   }
- * });
- * // 调用方法
- * someBase.someMethod();
- * // 控制台将输出：
- * // someEvent fired
- * ```
- */
-var Base = Class.create({
 
   /**
-   * 初始化函数，将自动执行；执行参数初始化与订阅事件初始化
+   * 基类
    *
-   * @method initialize
-   * @param {Object} options 参数
-   */
-  initialize: function (options) {
-    Base.superclass.initialize.apply(this, arguments);
-
-    // 初始化参数
-    this.__options = merge(this, options);
-
-    // 初始化订阅事件
-    this.initEvents();
-  },
-
-  mixins: [Events.prototype, Aspect.prototype],
-
-  /**
-   * 默认参数，子类自动继承并覆盖
+   * 实现 事件订阅 与 Aspect (AOP)
    *
-   * @property {Object} defaults
-   * @type {Object}
-   */
-  defaults: { },
-
-  /**
-   * 存取状态
+   * @class Base
+   * @constructor
+   * @implements Events
+   * @implements Aspect
    *
-   * @method state
-   * @param {Number} [state] 状态值
-   * @return {Mixed} 当前状态值或当前实例
+   * @example
+   * ```
+   * // 创建子类
+   * var SomeBase = Base.extend({
+   *   someMethod: function () {
+   *     this.fire('someEvent');
+   *   }
+   * });
+   * // 实例化
+   * var someBase = new SomeBase({
+   *   events: {
+   *     someEvent: function () {
+   *       console.log('someEvent fired');
+   *     }
+   *   }
+   * });
+   * // 调用方法
+   * someBase.someMethod();
+   * // 控制台将输出：
+   * // someEvent fired
+   * ```
    */
-  state: function (state) {
-    if (state === undefined) {
-      return this.__state;
-    }
+  var Base = Class.create({
 
-    this.__state = state;
-    return this;
-  },
+    /**
+     * 初始化函数，将自动执行；执行参数初始化与订阅事件初始化
+     *
+     * @method initialize
+     * @param {Object} options 参数
+     */
+    initialize: function(options) {
+      Base.superclass.initialize.apply(this, arguments);
 
-  /**
-   * 存取初始化后的数据/参数，支持多级存取，
-   * 如：this.option('rules/remote') 对应于 { rules: { remote: ... } }
-   *
-   * @method option
-   * @param {String} [key] 键
-   * @param {Mixed} [value] 值
-   * @param {String} [context] 上下文
-   * @return {Mixed} 整个参数列表或指定参数值
-   */
-  option: function (key, value, context, override) {
-    var options = context ? this.__options[context] : this.__options;
+      // 初始化参数
+      this.__options = merge(this, options);
 
-    if (key === undefined) {
-      return options;
-    }
+      // 初始化订阅事件
+      this.initEvents();
+    },
 
-    function get () {
-      var keyArr = key.split('/');
+    mixins: [Events.prototype, Aspect.prototype],
 
-      while ((key = keyArr.shift())) {
-        if (options.hasOwnProperty(key)) {
-          options = options[key];
+    /**
+     * 默认参数，子类自动继承并覆盖
+     *
+     * @property {Object} defaults
+     * @type {Object}
+     */
+    defaults: {},
+
+    /**
+     * 存取状态
+     *
+     * @method state
+     * @param {Number} [state] 状态值
+     * @return {Mixed} 当前状态值或当前实例
+     */
+    state: function(state) {
+      if (typeof state === 'undefined') {
+        return this.__state;
+      }
+
+      this.__state = state;
+      return this;
+    },
+
+    /**
+     * 存取初始化后的数据/参数，支持多级存取，
+     * 如：this.option('rules/remote') 对应于 { rules: { remote: ... } }
+     *
+     * @method option
+     * @param {String} [key] 键
+     * @param {Mixed} [value] 值
+     * @param {String} [context] 上下文
+     * @return {Mixed} 整个参数列表或指定参数值
+     */
+    option: function(key, value, context, override, undefined) {
+      var options = context ? this.__options[context] : this.__options;
+
+      if (typeof key === 'undefined') {
+        return options;
+      }
+
+      function get() {
+        var keyArr = key.split('/');
+
+        while ((key = keyArr.shift())) {
+          if (options.hasOwnProperty(key)) {
+            options = options[key];
+          } else {
+            return undefined;
+          }
+        }
+
+        return options;
+      }
+
+      function set() {
+        var keyMap = {};
+
+        function recruit(obj, arr) {
+          key = arr.shift();
+
+          if (key) {
+            obj[key] = recruit({}, arr);
+            return obj;
+          }
+
+          return value;
+        }
+
+        recruit(keyMap, key.split('/'));
+
+        copy(options, keyMap, override);
+      }
+
+      if (isObj(key)) {
+        copy(options, key, override);
+      } else {
+        if (typeof value === 'undefined') {
+          return get();
         } else {
-          return undefined;
+          set();
         }
       }
 
-      return options;
-    }
+      return this;
+    },
 
-    function set () {
-      var keyMap = {};
+    /**
+     * 事件订阅，以及AOP
+     *
+     * @method initEvents
+     * @param {Object|Function} [events] 事件订阅列表
+     * @return {Object} 当前实例
+     */
+    initEvents: function(events) {
+      var self = this;
 
-      function recruit (obj, arr) {
-        key = arr.shift();
+      events || (events = self.option('events'));
 
-        if (key) {
-          obj[key] = recruit({}, arr);
-          return obj;
+      if (!events) {
+        return self;
+      }
+
+      each(events, function(event, callback) {
+        var match;
+
+        if (typeof callback === 'string') {
+          callback = self[callback];
         }
 
-        return value;
-      }
+        if (typeof callback !== 'function') {
+          return true;
+        }
 
-      recruit(keyMap, key.split('/'));
+        match = /^(before|after):(\w+)$/.exec(event);
 
-      copy(options, keyMap, override);
-    }
+        if (match) {
+          // AOP
+          self[match[1]](match[2], callback);
+        } else {
+          // Subscriber
+          self.on(event, callback);
+        }
+      });
 
-    if (isObj(key)) {
-      copy(options, key, override);
-    } else {
-      if (value === undefined) {
-        return get();
-      } else {
-        set();
-      }
-    }
-
-    return this;
-  },
-
-  /**
-   * 事件订阅，以及AOP
-   *
-   * @method initEvents
-   * @param {Object|Function} [events] 事件订阅列表
-   * @return {Object} 当前实例
-   */
-  initEvents: function (events) {
-    var self = this;
-
-    events || (events = self.option('events'));
-
-    if (!events) {
       return self;
+    },
+
+    /**
+     * 销毁当前组件实例
+     * @method destroy
+     */
+    destroy: function() {
+      var prop;
+
+      // 移除事件订阅
+      this.off();
+
+      // 移除属性
+      for (prop in this) {
+        if (this.hasOwnProperty(prop)) {
+          delete this[prop];
+        }
+      }
+
+      this.destroy = function() {};
     }
 
-    each(events, function (event, callback) {
-      var match;
+  });
 
-      if (typeof callback === 'string') {
-        callback = self[callback];
-      }
-
-      if (typeof callback !== 'function') {
-        return true;
-      }
-
-      match = /^(before|after):(\w+)$/.exec(event);
-
-      if (match) {
-        // AOP
-        self[match[1]](match[2], callback);
-      } else {
-        // Subscriber
-        self.on(event, callback);
-      }
-    });
-
-    return self;
-  },
-
-  /**
-   * 销毁当前组件实例
-   * @method destroy
-   */
-  destroy: function () {
-    var prop;
-
-    // 移除事件订阅
-    this.off();
-
-    // 移除属性
-    for (prop in this) {
-      if (this.hasOwnProperty(prop)) {
-        delete this[prop];
-      }
-    }
-
-    this.destroy = function() { };
-  }
-
-});
-
-module.exports = Base;
+  module.exports = Base;
 
 });
