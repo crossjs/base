@@ -9,7 +9,7 @@ define(function (require, exports, module) {
 'use strict';
 
 /**
- * Aspect
+ * Aspect 在指定的方法执行前或执行后插入特定函数。
  *
  * http://http://en.wikipedia.org/wiki/Aspect-oriented_programming
  *

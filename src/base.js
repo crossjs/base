@@ -89,9 +89,10 @@ define(function(require, exports, module) {
    * 实现 事件订阅 与 Aspect (AOP)
    *
    * @class Base
+   * @extends Class
    * @constructor
-   * @implements Events
-   * @implements Aspect
+   * @uses Events
+   * @uses Aspect
    *
    * @example
    * ```
