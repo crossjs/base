@@ -157,6 +157,15 @@ define(function(require, exports, module) {
       }
 
       this.__state = state;
+
+      /**
+       * 通知组件状态改变
+       *
+       * @event state
+       * @param {object} e Event.
+       * @param {number} state 状态值
+       */
+      this.fire('state', state);
       return this;
     },
 
@@ -170,7 +179,8 @@ define(function(require, exports, module) {
      * @param {String} [context] 上下文
      * @return {Mixed} 整个参数列表或指定参数值
      */
-    option: function(key, value, context, override, undefined) {
+    /*jshint maxparams:4 */
+    option: function(key, value, context, override) {
       var options = context ? this.__options[context] : this.__options;
 
       if (typeof key === 'undefined') {
@@ -184,7 +194,7 @@ define(function(require, exports, module) {
           if (options.hasOwnProperty(key)) {
             options = options[key];
           } else {
-            return undefined;
+            return;
           }
         }
 
