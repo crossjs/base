@@ -18,7 +18,8 @@ define(function(require, exports, module) {
   }
 
   function isObj(obj) {
-    return Object.prototype.toString.call(obj) === '[object Object]' &&
+    return obj &&
+      Object.prototype.toString.call(obj) === '[object Object]' &&
       obj.constructor &&
       obj.constructor.prototype.hasOwnProperty('isPrototypeOf');
   }
