@@ -18,10 +18,11 @@ define(function(require, exports, module) {
   }
 
   function isObj(obj) {
-    return obj &&
+    return !!(obj &&
       Object.prototype.toString.call(obj) === '[object Object]' &&
       obj.constructor &&
-      obj.constructor.prototype.hasOwnProperty('isPrototypeOf');
+      obj.constructor.prototype.hasOwnProperty &&
+      obj.constructor.prototype.hasOwnProperty('isPrototypeOf'));
   }
 
   function copy(target, source, override) {
