@@ -4,3 +4,6 @@ gh-pages
 report
 dist
 doc
+_site
+coverage
+.idea
