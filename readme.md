@@ -1,7 +1,7 @@
 # Base
 
 ---
-  Base 基类，提供 [Class](http://10.5.121.139:3001/package/pandora-class)、[Events](http://10.5.121.139:3001/package/pandora-events)、Aspect 支持。
+Base 基类，提供 [Class](http://10.5.121.139:3001/package/pandora-class)、[Events](http://10.5.121.139:3001/package/pandora-events)、Aspect 支持。
 ---
 
 
