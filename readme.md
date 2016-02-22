@@ -1,27 +1,72 @@
-#base
+# Base
 
-[![Build Status](https://api.travis-ci.org/pandorajs/base.png?branch=master)](http://travis-ci.org/pandorajs/base)
-[![Coverage Status](https://coveralls.io/repos/pandorajs/base/badge.png?branch=master)](https://coveralls.io/r/pandorajs/base?branch=master)
+---
+  Base 基类，提供 [Class](http://10.5.121.139:3001/package/pandora-class)、[Events](http://10.5.121.139:3001/package/pandora-events)、Aspect 支持。
+---
 
- > base class, seajs module
 
-##how to demo
+## Install
 
-1. checkout
-1. run `npm install`
-1. run `spm install`
-1. run `grunt`
-1. view files in `/demo`
+```
+$ spm install pandora-base --save
+```
 
-##how to use
+## Usage
 
-1. run `spm install pandora/base`
-1. write `require('pandora/base/VERSION.NUMBER/base')`
 
-##find examples
+### extend `Base.extend(properties)`
 
-1. view the source files in '/src'
+基于 Base 创建子类
 
-##history
+```js
 
-- 1.0.0 - release
+var Base = require('pandora-base');
+// car.js
+var Car = Base.extend({
+  defaults: {
+    name: '普通的车'
+  },
+  say: function () {
+    this.fire('someEvent', this.option('name'));
+  }
+});
+// 实例化
+var car = new Car({
+  name: '神车',
+  events: {
+    someEvent: function (e, name) {
+      console.log('我是' + name);
+    }
+  }
+});
+// 调用方法
+car.say();
+// 控制台将输出：
+// 我是神车
+```
+
+### Base 与 Class 的关系
+
+Base 是使用 `Class` 创建的一个基础类，默认混入了  `Events`、`Aspect` 模块：
+
+```js
+
+// base.js
+var Class = require('pandora-class');
+var Events = require('pandora-events');
+var Aspect = require('./lib/aspect');
+
+var Base = Class.create({
+  mixins: [Events, Aspect],
+
+  initialize: function(options) {
+    ...
+  },
+
+  ...
+});
+
+...
+
+```
+

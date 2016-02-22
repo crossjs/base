@@ -13,6 +13,9 @@
   "freeze": false,
   "globals": {
     "define": true,
+    "it": true,
+    "require": true,
+    "describe": true,
     "seajs": true
   },
   "immed": true,
