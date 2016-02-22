@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>pandora-base - Aspect 使用文档</title>
+    <title>pandora-base - API 说明</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="generator" content="nico-spm 0.5.3" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -80,74 +80,27 @@ if (!location.port) {
       <div class="content-wrapper">
         
 <article class="hentry">
-  <h1 class="entry-title">Aspect 使用文档</h1>
+  <h1 class="entry-title">API 说明</h1>
   <div class="entry-content">
-    <p>使用 Aspect，可以允许你在指定方法执行的前后插入特定函数。</p>
-<hr>
-<h2 id="使用说明">使用说明<a href="#使用说明" class="anchor">¶</a></h2><p>基于 <code>Base.extend</code> 创建的类，会自动添加上 <code>Aspect</code> 提供的功能。</p>
-<h3 id="before-object-before-methodname-callback-context">before <code>object.before(methodName, callback, [context])</code><a href="#before-object-before-methodname-callback-context" class="anchor">¶</a></h3><p>在 <code>object[methodName]</code> 方法执行前，先执行 <code>callback</code> 函数。</p>
-<div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> Dialog = Base.extend({
-    ...
-
-    show: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-        console.log(<span class="number">2</span>);
-        <span class="keyword">this</span>.element.show();
-    },
-
-    ...
+    <h2 id="defaults">defaults<a href="#defaults" class="anchor">¶</a></h2><p>默认参数设置，可通过 .option 设置  </p>
+<div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> Animal = Base.extend({
+  defaults: {
+    name: <span class="string">'大象'</span>
+  },
+  say: <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+    <span class="keyword">this</span>.option(<span class="string">'feature'</span>, <span class="string">'会飞的'</span>)
+    console.log(<span class="string">'我是'</span> + <span class="keyword">this</span>.option(<span class="string">'feature'</span>) + <span class="keyword">this</span>.option(<span class="string">'name'</span>));
+  }
+});</code></pre></div><h2 id="state-state-state">state <code>.state([state])</code><a href="#state-state-state" class="anchor">¶</a></h2><p>存取状态</p>
+<h2 id="option-option-key-value-context-override">option <code>.option(key, value, context, override)</code><a href="#option-option-key-value-context-override" class="anchor">¶</a></h2><div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> baseA = <span class="keyword">new</span> Base({
+  x: <span class="number">2</span>,
+  y: <span class="number">3</span>,
+  z: { a: <span class="number">1</span> }
 });
+baseA.option(<span class="string">'z/a'</span>); <span class="comment">// =&gt; 1</span></code></pre></div><p>存取初始化后的数据/参数，支持多级存取</p>
+<h2 id="initevents-initevents">initEvents <code>.initEvents()</code><a href="#initevents-initevents" class="anchor">¶</a></h2><p>初始化订阅事件</p>
+<h2 id="destroy-destroy">destroy <code>.destroy()</code><a href="#destroy-destroy" class="anchor">¶</a></h2><p>销毁当前组件实例</p>
 
-<span class="keyword">var</span> dialog = <span class="keyword">new</span> Dialog();
-
-dialog.before(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">1</span>);
-});
-
-dialog.after(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">3</span>);
-});
-
-dialog.show(); <span class="comment">// ==&gt; 1, 2, 3</span></code></pre></div><p><code>callback</code> 函数在执行时，接收的参数与传给 <code>object[methodName]</code> 参数相同。如果传入了
-<code>context</code> 参数，则 <code>callback</code> 里的 <code>this</code> 指向 <code>context</code>。</p>
-<div class="highlight"><pre><code class="javascript"><span class="keyword">var</span> dialog = <span class="keyword">new</span> Dialog();
-
-dialog.before(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">(a, b)</span> {</span>
-    console.log(a);
-    console.log(b);
-});
-
-dialog.show(<span class="number">1</span>, <span class="number">2</span>); <span class="comment">// ==&gt; 1, 2</span></code></pre></div><p><strong>可以在 <code>callback</code> 中 return false 来阻止原函数执行。</strong></p>
-<div class="highlight"><pre><code class="javascript">dialog.before(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">1</span>);
-    <span class="keyword">return</span> <span class="literal">false</span>;
-});
-
-dialog.after(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">3</span>);
-});
-
-dialog.show(); <span class="comment">// ==&gt; 1</span></code></pre></div><h3 id="after-object-after-methodname-callback-context">after <code>object.after(methodName, callback, [context])</code><a href="#after-object-after-methodname-callback-context" class="anchor">¶</a></h3><p>在 <code>object[methodName]</code> 方法执行后，再执行 <code>callback</code> 函数。</p>
-<p><code>callback</code> 函数在执行时，接收的参数是 <code>object[methodName]</code> 执行完成后的返回值以及传给 <code>object[methodName]</code> 的参数。如果传入了
-<code>context</code> 参数，则 <code>callback</code> 里的 <code>this</code> 指向 <code>context</code>。</p>
-<pre>var dialog = new Dialog();
-
-dialog.after(&#39;show&#39;, function(returned, a, b) {
-  console.log(returned); // show 的返回值
-    console.log(a);
-    console.log(b);
-});
-
-dialog.show(1, 2); // ==&gt; undefined, 1, 2</pre><p><strong>注意</strong></p>
-<p><code>before</code> 和 <code>after</code> 是按注册的先后顺序执行的，先注册先执行。</p>
-<div class="highlight"><pre><code class="javascript">dialog.before(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">1</span>);
-});
-
-dialog.before(<span class="string">'show'</span>, <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
-    console.log(<span class="number">2</span>);
-});
-
-dialog.show(); <span class="comment">// ==&gt; 1, 2</span></code></pre></div>
   </div>
 </article>
 
