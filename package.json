@@ -1,7 +1,7 @@
 {
   "name": "pandora-base",
   "version": "1.1.0",
-  "description": "base class, with events and AOP",
+  "description": "Base 是一个基础类，提供 Class、Events 和 Aspect 支持。",
   "keywords": ["pandora","base"],
   "homepage": "https://github.com/pandorajs/base",
   "author": {
