@@ -1,14 +1,16 @@
 # Base
 
 ---
-Base 基类，提供 [Class](http://10.5.121.139:3001/package/pandora-class)、[Events](http://10.5.121.139:3001/package/pandora-events)、Aspect 支持。
+Base 基类，提供 [Class](https://github.com/pandorajs/class)、[Events](https://github.com/pandorajs/events)、Aspect 支持。
 ---
+
+[![codecov](https://codecov.io/gh/pandorajs/base/branch/master/graph/badge.svg)](https://codecov.io/gh/pandorajs/base)
 
 
 ## Install
 
 ```
-$ spm install pandora-base --save
+$ npm install pandora-base --save
 ```
 
 ## Usage
@@ -69,4 +71,3 @@ var Base = Class.create({
 ...
 
 ```
-

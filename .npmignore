@@ -1,0 +1,11 @@
+_site
+spm_modules
+node_modules
+.DS_Store
+.idea
+.git
+build
+example
+npm-debug.log
+dist
+config.js

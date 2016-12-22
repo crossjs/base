@@ -7,3 +7,4 @@ doc
 _site
 coverage
 .idea
+.DS_Store
